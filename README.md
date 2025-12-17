@@ -12,7 +12,7 @@ A simple terminal-based voice chatbot that uses local LLaMA AI model. Speak to t
 
 ✅ **Voice Input** - Records audio from microphone  
 ✅ **Speech-to-Text** - Converts voice to text using OpenAI Whisper  
-✅ **Local AI** - Uses LLaMA model via Ollama  
+✅ **Local AI** - Uses LLaMA3.2 model via Ollama  
 ✅ **Text Response** - Displays AI response in terminal  
 ✅ **Text-to-Speech** - Speaks the response aloud  
 ✅ **Simple Loop** - Continuous conversation until you say "exit"  
@@ -25,7 +25,7 @@ A simple terminal-based voice chatbot that uses local LLaMA AI model. Speak to t
 |-----------|-----------|
 | **Voice Input** | `speech_recognition` + `pyaudio` |
 | **Speech-to-Text** | OpenAI `whisper` |
-| **AI Model** | LLaMA 3 (via Ollama) |
+| **AI Model** | LLaMA 3.2 (via Ollama) |
 | **Text-to-Speech** | `pyttsx3` |
 | **API Communication** | `requests` |
 | **Deep Learning** | `torch` |

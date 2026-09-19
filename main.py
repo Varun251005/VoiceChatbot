@@ -1,49 +1,63 @@
 from voice_input import get_voice_input
 from llama_client import get_llama_response
 from text_to_speech import speak
+import os
+
 
 def main():
-    """
-    Main controller - Glues all modules together
-    Flow: Listen → Send to LLaMA → Speak response
-    """
+    """Main controller - accepts text or voice input, replies in text and speech."""
     print("=" * 50)
     print("🎤 Voice LLaMA Chatbot Started")
     print("=" * 50)
-    print("💡 Say 'exit' to quit\n")
-    
+    print("💡 Type a message or press Enter to speak. Say 'exit' to quit.\n")
+
     while True:
-        # Step 1: Get voice input
-        user_text = get_voice_input()
-        
-        # Check if user wants to exit
-        if user_text.lower() == "exit":
+        # Prompt user: typed input or voice
+        try:
+            prompt = input("Type message or press Enter to speak (or 'exit'): ").strip()
+        except (EOFError, KeyboardInterrupt):
             print("\n👋 Goodbye!")
             speak("Goodbye!")
             break
-        
-        # Skip if no text was recognized
+
+        # Exit immediately if typed 'exit'
+        if prompt.lower() == "exit":
+            print("\n👋 Goodbye!")
+            speak("Goodbye!")
+            break
+
+        # Use typed input if provided, otherwise use voice
+        if prompt:
+            user_text = prompt
+            print(f"📝 You typed: {user_text}")
+        else:
+            print("\n🎤 Listening... Speak now!")
+            user_text = get_voice_input()
+            if user_text:
+                print(f"📝 You said: {user_text}")
+
+        # Check if we got any input
         if not user_text:
-            print("⚠️ Please try again\n")
+            print("⚠️ No input detected. Please try again\n")
             continue
-        
-        # Step 2: Send to LLaMA
-        llama_response = get_llama_response(user_text)
-        
-        # Skip if no response
+
+        # Send to LLaMA (provide fallback API key from env if present)
+        fallback_key = os.getenv("FALLBACK_OPENAI_API_KEY") or os.getenv("OPENAI_API_KEY")
+        llama_response = get_llama_response(user_text, fallback_api_key=fallback_key)
+
         if not llama_response:
             print("⚠️ No response from LLaMA\n")
             continue
-        
-        # Step 3: Print response
+
+        # Print and speak response
         print("\n" + "=" * 50)
         print(f"📄 Response:\n{llama_response}")
         print("=" * 50 + "\n")
-        
-        # Step 4: Speak response
+
         speak(llama_response)
-        
+
         print("-" * 50 + "\n")
+
 
 if __name__ == "__main__":
     main()
